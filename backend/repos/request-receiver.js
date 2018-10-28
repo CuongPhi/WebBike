@@ -20,14 +20,15 @@ class RequestRepos {
              note TEXT,
              address TEXT,
              status INTERGER,
-             isDelete INTERGER 
+             isDelete INTERGER,
+             iat INTERGER 
          ) `;
        return DbFunction.runQuery(sql);
     }
 
     addRequest(reqObj) {
-        return DbFunction.runQuery(`INSERT INTO ${tableName}  (name, phone, note, address,status,isDelete) VALUES (?,?,?,?,?,?)`,
-        [reqObj.name, reqObj.phone, reqObj.note, reqObj.address, 0, 0]);
+        return DbFunction.runQuery(`INSERT INTO ${tableName}  (name, phone, note, address,iat, status,isDelete) VALUES (?,?,?,?,?,?,?)`,
+        [reqObj.name, reqObj.phone, reqObj.note, reqObj.address,reqObj.iat ,  0, 0]);
     }
     updateRequest(Request) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET name = ? WHERE id = ?`,
