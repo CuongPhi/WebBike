@@ -1,5 +1,6 @@
 var router = require("express").Router();
 var RequestRepos =  require ('../repos/request-receiver');
+var moment = require('moment');
 
 const requestRepos = new RequestRepos();
 
@@ -11,6 +12,7 @@ router.get('/', (req,res)=>{
      address : req.query.address,
      phone : req.query.phone,
      note : req.query.note,
+     iat: moment().unix()
     }
     requestRepos.addRequest(reqObj).then(()=>{
         res.status(201).send(JSON.stringify({
