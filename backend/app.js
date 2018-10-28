@@ -3,21 +3,23 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var PORT = process.env.PORT || 1234;
 var app = express();
-var CategoriesReps =  require ('./repos/categories');
+var reqCtrl = require('./APIcontrollers/requestCtrl')
 
-const categoriesReps = new CategoriesReps();
+var RequestRepos =  require ('./repos/request-receiver');
+const requestRepos = new RequestRepos();
+
 
 app.use(cors());
 app.use(bodyParser.json());
 
 
 
-categoriesReps.getAll()
+requestRepos.getAll()
 .then((rows) => console.log(rows));
 
 
 
-
+app.use('/api/req/', reqCtrl);
 
 
 
