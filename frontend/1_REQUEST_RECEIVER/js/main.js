@@ -1,13 +1,13 @@
 
 (function ($) {
     "use strict";
-
+    var socket = io('http://localhost:1235');
 
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');
 
-    $('.validate-form').on('submit',function(){
+    $('.validate-form').on('click',function(){
         var check = true;
 
         for(var i=0; i<input.length; i++) {
@@ -15,10 +15,24 @@
                 showValidate(input[i]);
                 check=false;
             }
-        }      
+        }     
+    
         return check;
     });
+    $('#form-request').on('submit', function(){
 
+        var name = $('#name').val();
+        var phone = $('#phone').val();
+        var address = $('#address').val();
+        var note = $('#note').val();
+        var newReq = {
+            name : name,
+            phone : phone,
+            address : address,
+            note : note
+        } 
+        socket.emit('event-add-request', JSON.stringify(newReq));
+    })
 
     $('.validate-form .input100').each(function(){
         $(this).focus(function(){

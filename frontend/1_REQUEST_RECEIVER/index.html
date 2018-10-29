@@ -34,38 +34,38 @@
 		<div class="contact100-map" id="google_map" data-map-x="40.722047" data-map-y="-73.986422" data-pin="images/icons/map-marker.png" data-scrollwhell="0" data-draggable="1"></div>
 
 		<div class="wrap-contact100">
-			<form class="contact100-form validate-form" action='http://localhost:1234/api/req/' method='GET'>
+			<form class="contact100-form validate-form" id='form-request'>
 				<span class="contact100-form-title">
 					WebBike
 				</span>
 
 				<div class="wrap-input100 validate-input" data-validate="Name is required">
-					<input class="input100" type="text" name="name" placeholder="Full Name">
+					<input class="input100" type="text" id="name" placeholder="Full Name">
 					<span class="focus-input100-1"></span>
 					<span class="focus-input100-2"></span>
 				</div>
 
 				<div class="wrap-input100 validate-input" data-validate = "Phone is required">
-					<input class="input100" type="text" name="phone" placeholder="Phone">
+					<input class="input100" type="text" id="phone" placeholder="Phone">
 					<span class="focus-input100-1"></span>
 					<span class="focus-input100-2"></span>
 				</div>
 
 				<div class="wrap-input100 validate-input" data-validate="Address is required">
-					<input class="input100" type="text" name="address" placeholder="Address">
+					<input class="input100" type="text" id="address" placeholder="Address">
 					<span class="focus-input100-1"></span>
 					<span class="focus-input100-2"></span>
 				</div>
 
 				<div class="wrap-input100" data-validate = "Note">
-					<textarea class="input100" name="note" placeholder="Your note"></textarea>
+					<textarea class="input100" id="note" placeholder="Your note"></textarea>
 					<span class="focus-input100-1"></span>
 					<span class="focus-input100-2"></span>
 				</div>
 			
 
 				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn" type='submit'>
+					<button class="contact100-form-btn" id='btn_submit' type='submit'>
 						Booking
 					</button>
 				</div>
@@ -95,6 +95,10 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKFWBqlKAGCeS1rMVoaNlwyayu0e0YRes"></script>
 	<script src="js/map-custom.js"></script>
 <!--===============================================================================================-->
+
+	<script src="./resource/socket.io.js"></script>
+	<script src="./resource/vue.js"></script>
+
 	<script src="js/main.js"></script>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
