@@ -30,7 +30,7 @@ class RequestRepos {
         return DbFunction.runQuery(`INSERT INTO ${tableName}  (name, phone, note, address,iat, status,isDelete) VALUES (?,?,?,?,?,?,?)`,
         [reqObj.name, reqObj.phone, reqObj.note, reqObj.address,reqObj.iat ,  0, 0]);
     }
-    updateRequest(Request) {
+    updateRequestName(Request) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET name = ? WHERE id = ?`,
         [Request.name, Request.id]);
     }
@@ -43,6 +43,14 @@ class RequestRepos {
     }
     getAll() {
         return DbFunction.getAll(`SELECT * FROM  ${tableName} WHERE isDelete = 0`);
+    }
+    getAll_Stt0(){
+        return DbFunction.getAll(`SELECT * FROM  ${tableName} WHERE isDelete = 0 AND status = 0`);
+
+    }
+    updateRequestStt(Request) {
+        return DbFunction.runQuery(`UPDATE ${tableName} SET status = ? WHERE id = ?`,
+        [Request.status, Request.id]);
     }
 }
 
