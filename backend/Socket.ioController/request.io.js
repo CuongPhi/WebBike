@@ -5,7 +5,6 @@ var moment = require('moment');
 var eventGetAll = (io)=>{
     requestRepos.getAll_Stt0()
     .then(rows=>{
-        console.log('sending.........................');   
         io.sockets.emit('event-request-reciever', JSON.stringify(rows));
     })
     .catch(err=>{
@@ -15,9 +14,22 @@ var eventGetAll = (io)=>{
         }));
     })
 }
+var eventGetAllReq = (io)=>{
+    requestRepos.getAll()
+    .then(rows=>{
+        io.sockets.emit('event-request-management', JSON.stringify(rows));
+    })
+    .catch(err=>{
+        io.sockets.emit('event-request-management', JSON.stringify({
+            msg: 'error to get list request-reciever',
+            err: err
+        }));
+    })
+}
 
 module.exports.response = function(io, client){
     eventGetAll(io);
+    eventGetAllReq(io);
     client.on('disconnecting', (reason)=>{
         console.log('disconnecting, id = ' + client.id + reason);        
     });
@@ -36,5 +48,5 @@ module.exports.response = function(io, client){
         .then(()=>{
             io.sockets.emit('event-change-stt-to-1-ok', req);
         })
-    })
+    });
 }

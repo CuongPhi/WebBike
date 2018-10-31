@@ -9,10 +9,12 @@ var app = new Vue({
     methods: {
         changeStt(_id){
             console.log(_id);
-            socket.emit('event-change-stt-to-1', JSON.stringify({
-                id : _id,
-                status : 1
-            }));
+
+            
+            // socket.emit('event-change-stt-to-1', JSON.stringify({
+            //     id : _id,
+            //     status : 1
+            // }));
         }
     },
     created() {

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+            /*Using CSS for table*/
+            .demotbl {
+                border: 0px solid #69899F;
+                margin: auto;
+              }
+            .demotbl th{
+                padding:15px;
+                color:#fff;
+                text-shadow:1px 1px 1px #568F23;
+                border-bottom:3px solid #9ED929;
+                background-color:#9DD929;
+                background:-webkit-gradient(
+                    linear,
+                    left bottom,
+                    left top,
+                    color-stop(0.02, rgb(123,192,67)),
+                    color-stop(0.51, rgb(139,198,66)),
+                    color-stop(0.87, rgb(158,217,41))
+                    );
+                background: -moz-linear-gradient(
+                    center bottom,
+                    rgb(123,192,67) 3%,
+                    rgb(139,198,66) 52%,
+                    rgb(158,217,41) 88%
+                    );
+                -webkit-border-top-left-radius:5px;
+                -webkit-border-top-right-radius:5px;
+                -moz-border-radius:5px 5px 0px 0px;
+                border-top-left-radius:5px;
+                border-top-right-radius:5px;
+              }
+            .demotbl td{
+                width:100px;
+                padding:10px;
+                text-align:center;
+                vertical-align: top;
+                background-color:#DEF3CA;
+                border: 1px solid #BED3AB;
+                -moz-border-radius:2px;
+                -webkit-border-radius:2px;
+                border-radius:2px;
+                color:#666;
+                text-shadow:1px 1px 1px #fff;
+            
+              }
+              .demotbl tbody {
+                display:block;
+                overflow:auto;
+                height:500px;
+                width:100%;
+            }
+            .demotbl thead tr{
+                display:block;
+            }
+            .demotbl .sst1{
+                background-color:purple !important;
+            } 
+            .demotbl .sst0{
+                background-color:red !important;
+
+            } 
+            .demotbl .sst2{
+                background-color:blue !important;
+            } 
+            .demotbl .sst3{
+                background-color:#DEF3CA !important;
+            }    
+    </style>
+    <title>LOCATION MANAGEMENT</title>
+</head>
+<body>
+    <div id="app"> 
+        <div class="wraper">
+            <table class="demotbl">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Request Name</th>
+                        <th>Request Phone</th>
+                        <th>Request Address</th>
+                        <th>Request Date</th>
+                        <th>Request Note</th>
+                        <th>Request Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id='display-row'  v-for="req in requests">
+                        <td>{{req.id}}</td>
+                        <td>{{req.name}}</td>
+                        <td>{{req.phone}}</td>
+                        <td>{{req.address}}</td>
+                        <td>{{req.date}}</td>
+                        <td>{{req.note}}</td>
+                        <td v-bind:class="{'sst1': (req.status == 1), 'sst2': (req.status == 2), 'sst0': (req.status == 0), 'sst3': (req.status == 3)}">{{req.status}}</td>
+                    </tr>
+                </tbody>     
+            </table>
+        </div>  
+    </div>  
+    <script src="./resource/socket.io.js"></script>
+    <script src="./resource/vue.js"></script>
+    <script src="./main.js"></script>
+
+</body>
+</html>
