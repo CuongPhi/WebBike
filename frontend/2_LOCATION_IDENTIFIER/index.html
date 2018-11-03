@@ -4,102 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-            /*Using CSS for table*/
-            .demotbl {
-                border: 0px solid #69899F;
-                margin: auto;
-              }
-            .demotbl th{
-                padding:15px;
-                color:#fff;
-                text-shadow:1px 1px 1px #568F23;
-                border-bottom:3px solid #9ED929;
-                background-color:#9DD929;
-                background:-webkit-gradient(
-                    linear,
-                    left bottom,
-                    left top,
-                    color-stop(0.02, rgb(123,192,67)),
-                    color-stop(0.51, rgb(139,198,66)),
-                    color-stop(0.87, rgb(158,217,41))
-                    );
-                background: -moz-linear-gradient(
-                    center bottom,
-                    rgb(123,192,67) 3%,
-                    rgb(139,198,66) 52%,
-                    rgb(158,217,41) 88%
-                    );
-                -webkit-border-top-left-radius:5px;
-                -webkit-border-top-right-radius:5px;
-                -moz-border-radius:5px 5px 0px 0px;
-                border-top-left-radius:5px;
-                border-top-right-radius:5px;
-              }
-            .demotbl td{
-                width:100px;
-                padding:10px;
-                text-align:center;
-                vertical-align: top;
-                background-color:#DEF3CA;
-                border: 1px solid #BED3AB;
-                -moz-border-radius:2px;
-                -webkit-border-radius:2px;
-                border-radius:2px;
-                color:#666;
-                text-shadow:1px 1px 1px #fff;
-            
-              }
-              .demotbl tbody {
-                display:block;
-                overflow:auto;
-                height:500px;
-                width:100%;
-            }
-            .demotbl thead tr{
-                display:block;
-            }
-            .demotbl .sst1{
-                background-color:purple !important;
-            } 
-            .demotbl .sst0{
-                background-color:red !important;
-
-            } 
-            .demotbl .sst2{
-                background-color:blue !important;
-            } 
-            .demotbl .sst3{
-                background-color:#DEF3CA !important;
-            }    
-    </style>
+    <link rel="stylesheet" href="./resource/style.css" media="screen" />
     <title>LOCATION IDENTIFIER</title>
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyD8bQzMru84BpSm9d9pl6bNWn8U10Ru9U0&sensor=false"></script>
 </head>
 <body>
     <div id="app"> 
         <div class="wraper">
-            <table class="demotbl">
-                <thead>
-                    <tr>
-                        <th>Request ID</th>
-                        <th>Request Name</th>
-                        <th>Request Phone</th>
-                        <th>Request Address</th>
-                        <th>Request Note</th>
-                        <th>Request Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id='display-row'  v-for="req in requests">
-                        <td>{{req.id}}</td>
-                        <td>{{req.name}}</td>
-                        <td>{{req.phone}}</td>
-                        <td>{{req.address}}</td>
-                        <td>{{req.note}}</td>
-                        <td @click="changeStt(req.id)" v-bind:class="{'sst1': (req.status == 1), 'sst2': (req.status == 2), 'sst0': (req.status == 0), 'sst3': (req.status == 3)}">{{req.status}}</td>
-                    </tr>
-                </tbody>     
-            </table>
+            <div class="table-display-req div-erea-parent">
+                    <table class="demotbl">
+                            <thead>
+                                <tr>
+                                    <th id='id-col-50'> ID</th>
+                                    <th> Name/Phone</th>
+                                    <th> Address</th>
+                                    <th> Time</th>
+                                    <th> Note</th>
+                                    <th> Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id='display-row'  v-for="req in requests">
+                                    <td id='id-col-50'>{{req.id}}</td>
+                                    <td>{{req.name}}-{{req.phone}}</td>
+                                    <td>{{req.address}}</td>
+                                    <td>{{req.date}}</td>
+                                    <td>{{req.note}}</td>
+                                    <td @click="changeStt(req.id)" v-bind:class="{'sst1': (req.status == 1), 'sst2': (req.status == 2), 'sst0': (req.status == 0), 'sst3': (req.status == 3)}">{{req.status}}</td>
+                                </tr>
+                            </tbody>     
+                    </table>
+            </div>
+            <div class="google-map-area div-erea-parent">
+                <div id="floating-panel">
+                    <input id="address" type="textbox" value="Sydney, NSW">
+                    <input id="submit" type="button" value="Geocode">
+                </div>
+                <div id="googleMap" style="width:100%;height:500px;"></div>
+            </div>
         </div>  
     </div>  
     <script src="./resource/socket.io.js"></script>
