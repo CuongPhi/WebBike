@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
+        <style>
             /*Using CSS for table*/
             .demotbl {
                 border: 0px solid #69899F;
                 margin: auto;
-              }
+            }
             .demotbl th{
-                padding:15px;
+                width:100px;
+                padding:10px;
                 color:#fff;
                 text-shadow:1px 1px 1px #568F23;
                 border-bottom:3px solid #9ED929;
@@ -35,7 +36,7 @@
                 -moz-border-radius:5px 5px 0px 0px;
                 border-top-left-radius:5px;
                 border-top-right-radius:5px;
-              }
+            }
             .demotbl td{
                 width:100px;
                 padding:10px;
@@ -49,8 +50,8 @@
                 color:#666;
                 text-shadow:1px 1px 1px #fff;
             
-              }
-              .demotbl tbody {
+            }
+            .demotbl tbody {
                 display:block;
                 overflow:auto;
                 height:500px;
@@ -71,6 +72,9 @@
             } 
             .demotbl .sst3{
                 background-color:#DEF3CA !important;
+            }
+            .demotbl #id-col-50 {
+                width:50px !important;
             }    
     </style>
     <title>LOCATION MANAGEMENT</title>
@@ -81,24 +85,22 @@
             <table class="demotbl">
                 <thead>
                     <tr>
-                        <th>Request ID</th>
-                        <th>Request Name</th>
-                        <th>Request Phone</th>
-                        <th>Request Address</th>
-                        <th>Request Date</th>
-                        <th>Request Note</th>
-                        <th>Request Status</th>
+                        <th id='id-col-50'> ID</th>
+                        <th> Name/Phone</th>
+                        <th> Address</th>
+                        <th> Time</th>
+                        <th> Note</th>
+                        <th> Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr id='display-row'  v-for="req in requests">
-                        <td>{{req.id}}</td>
-                        <td>{{req.name}}</td>
-                        <td>{{req.phone}}</td>
+                        <td id='id-col-50'>{{req.id}}</td>
+                        <td>{{req.name}}-{{req.phone}}</td>
                         <td>{{req.address}}</td>
                         <td>{{req.date}}</td>
                         <td>{{req.note}}</td>
-                        <td v-bind:class="{'sst1': (req.status == 1), 'sst2': (req.status == 2), 'sst0': (req.status == 0), 'sst3': (req.status == 3)}">{{req.status}}</td>
+                        <td @click="changeStt(req.id)" v-bind:class="{'sst1': (req.status == 1), 'sst2': (req.status == 2), 'sst0': (req.status == 0), 'sst3': (req.status == 3)}">{{req.status}}</td>
                     </tr>
                 </tbody>     
             </table>
