@@ -78,7 +78,7 @@
 .demotbl #id-col-50 {
   width: 50px !important;
 }
-#floating-panel {
+.floating-panel {
   position: absolute;
   top: 10px;
   left: 60%;
@@ -90,4 +90,7 @@
   font-family: "Roboto", "sans-serif";
   line-height: 30px;
   padding-left: 10px;
+}
+.reverse-pannel-class{
+    left: 80%; 
 }
