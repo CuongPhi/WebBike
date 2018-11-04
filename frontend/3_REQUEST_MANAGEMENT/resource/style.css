@@ -64,10 +64,10 @@
   display: block;
 }
 .demotbl .sst1 {
-  background-color: purple !important;
+  background-color: rgb(170, 107, 170) !important;
 }
 .demotbl .sst0 {
-  background-color: red !important;
+  background-color: rgb(248, 115, 115) !important;
 }
 .demotbl .sst2 {
   background-color: blue !important;
