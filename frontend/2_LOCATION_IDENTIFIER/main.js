@@ -1,6 +1,7 @@
 var socket = io("http://localhost:1235");
 var map, marker,infowindow, geocoder;
 const ZOOM_SIZE = 16;
+
 var app = new Vue({
   el: "#app",
   data: {
@@ -8,12 +9,20 @@ var app = new Vue({
     requests: []
   },
   methods: {
+    searchAddress(address){
+      var self = this;
+      document.getElementById("address").value = address;
+      self.geocodeAddress(geocoder,address,map);
+    },
     changeStt(_id) {
-      console.log(_id);
-      // socket.emit('event-change-stt-to-1', JSON.stringify({
-      //     id : _id,
-      //     status : 1
-      // }));
+      var r = confirm(`Định vị id: ${_id} ?`);
+      if(r){
+         socket.emit('event-change-stt-to-1', JSON.stringify({
+           id : _id,
+           status : 1
+       }));
+
+      }      
     },
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
@@ -28,9 +37,8 @@ var app = new Vue({
         date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec
       );
     },
-    geocodeAddress(geocoder, map) {
+    geocodeAddress(geocoder,address, map) {
         var self = this;
-      var address = document.getElementById("address").value;
       geocoder.geocode({ address: address }, function(results, status) {
         if (status === "OK") {
             if (results[0]) {
@@ -53,6 +61,8 @@ var app = new Vue({
                  self.setMarker(results[0].geometry.location);
                  map.setCenter(results[0].geometry.location); 
                  infowindow.setContent(results[0].formatted_address);
+                document.getElementById("address").value=results[0].formatted_address;
+
                } 
         } else {
           alert(
@@ -77,7 +87,8 @@ var app = new Vue({
        geocoder = new google.maps.Geocoder();
        infowindow = new google.maps.InfoWindow();
       document.getElementById("submit").addEventListener("click", function() {
-        self.geocodeAddress(geocoder, map);
+        var address = document.getElementById("address").value;
+        self.geocodeAddress(geocoder,address, map);
         
       });
         map = new google.maps.Map(
@@ -121,6 +132,8 @@ var app = new Vue({
       });
       self.requests.forEach(e => {
         e.date = self.timeConverter(e.iat);
+        e.note_trim = e.note.substr(0, 30);
+        e.status_string = 'Chưa định vị';
       });
     });
     google.maps.event.addDomListener(window, "load", self.initialize);
