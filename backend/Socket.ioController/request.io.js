@@ -44,7 +44,7 @@ module.exports.response = function(io, client){
     });
     client.on('event-change-stt-to-1', (req)=>{
         var _req = JSON.parse(req);
-        requestRepos.updateRequestStt(_req)
+        requestRepos.locatedRequest(_req)
         .then(()=>{
             io.sockets.emit('event-change-stt-to-1-ok', req);
         })

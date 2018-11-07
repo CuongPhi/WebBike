@@ -1,7 +1,7 @@
 var socket = io("http://localhost:1235");
 var map, marker,infowindow, geocoder;
 const ZOOM_SIZE = 16;
-
+var LATLNG;
 var app = new Vue({
   el: "#app",
   data: {
@@ -19,7 +19,8 @@ var app = new Vue({
       if(r){
          socket.emit('event-change-stt-to-1', JSON.stringify({
            id : _id,
-           status : 1
+           lat: LATLNG.lat(),
+           lng: LATLNG.lng()
        }));
 
       }      
@@ -44,7 +45,8 @@ var app = new Vue({
             if (results[0]) {
                  self.setMarker(results[0].geometry.location);
                  map.setCenter(results[0].geometry.location); 
-                  infowindow.setContent(results[0].formatted_address);
+                 infowindow.setContent(results[0].formatted_address);
+                 LATLNG = results[0].geometry.location;
                } 
         } else {
           alert(
@@ -62,6 +64,7 @@ var app = new Vue({
                  map.setCenter(results[0].geometry.location); 
                  infowindow.setContent(results[0].formatted_address);
                 document.getElementById("address").value=results[0].formatted_address;
+                LATLNG = results[0].geometry.location;
 
                } 
         } else {
@@ -136,6 +139,7 @@ var app = new Vue({
         e.status_string = 'Chưa định vị';
       });
     });
+   
     google.maps.event.addDomListener(window, "load", self.initialize);
   }
 });

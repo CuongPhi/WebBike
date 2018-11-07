@@ -1,12 +1,12 @@
 var DbFunction = require('../fn/sqlite3-db');
 const tableName = 'request_receiver';
-/* trạng thái request
-chưa được định vị 0
-đã định vị xong,  1
-đã có xe nhận     2
-đang di chuyển    3
-đã hoàn thành     4
-*/
+        /* trạng thái request
+        chưa được định vị 0
+        đã định vị xong,  1
+        đã có xe nhận     2
+        đang di chuyển    3
+        đã hoàn thành     4
+        */
 class RequestRepos {
     constructor(){
         this.createTable();
@@ -21,14 +21,16 @@ class RequestRepos {
              address TEXT,
              status INTERGER,
              isDelete INTERGER,
-             iat INTERGER 
+             iat INTERGER,
+             lat REAL,
+             lng REAL
          ) `;
        return DbFunction.runQuery(sql);
     }
 
     addRequest(reqObj) {
-        return DbFunction.runQuery(`INSERT INTO ${tableName}  (name, phone, note, address,iat, status,isDelete) VALUES (?,?,?,?,?,?,?)`,
-        [reqObj.name, reqObj.phone, reqObj.note, reqObj.address,reqObj.iat ,  0, 0]);
+        return DbFunction.runQuery(`INSERT INTO ${tableName}  (name, phone, note, address,iat, status,isDelete, lat, lng) VALUES (?,?,?,?,?,?,?,?,?)`,
+        [reqObj.name, reqObj.phone, reqObj.note, reqObj.address,reqObj.iat ,  0, 0, 0 , 0]);
     }
     updateRequestName(Request) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET name = ? WHERE id = ?`,
@@ -51,6 +53,10 @@ class RequestRepos {
     updateRequestStt(Request) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET status = ? WHERE id = ?`,
         [Request.status, Request.id]);
+    }
+    locatedRequest(Request) {
+        return DbFunction.runQuery(`UPDATE ${tableName} SET status = 1, lat = ?, lng = ? WHERE id = ?`,
+        [Request.lat, Request.lng, Request.id]);
     }
 }
 

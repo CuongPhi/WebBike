@@ -68,6 +68,8 @@ var app = new Vue({
         var self = this;
         socket.on('event-request-management', function(rows){
             self.requests = JSON.parse(rows);
+            console.log(rows);
+
             self.requests.sort(function(a, b) {
               return b.iat - a.iat;
             });
