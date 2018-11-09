@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="./resource/style.css" media="screen" />
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyD8bQzMru84BpSm9d9pl6bNWn8U10Ru9U0&sensor=false"></script>
+    <link rel="stylesheet" href="./resource/login.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>DRIVER</title>
+  </head>
+  <body >
+    <div id="app">
+      <div style="display: none" id="div_google_map">
+        <div class="wraper">
+          <div
+            class="table-display-req div-erea-parent"
+            style="height:10vh"
+          ></div>
+          <div class="google-map-area div-erea-parent">
+            <div id="googleMap" style="width:100%; height:50vh;"></div>
+          </div>
+          <div class="table-display-req div-erea-parent"></div>
+        </div>
+      </div>
+      <div v-if="!LOGIN_SUCCESS" style="display: block" id="div_login_form">
+        <div class="header"><h2>Login</h2></div>
+
+        <form id="formLogin">
+          <div class="input-group">
+            <label>Username</label>
+            <input id="frm-username" type="text" name="username" />
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input id="frm-password" type="password" name="password" />
+          </div>
+          <div class="input-group">
+            <button type="button" class="btn" id="login_user">Login</button>
+          </div>
+          <!--
+            <p>
+                Not yet a member? <a href="register.php">Sign up</a>
+            </p>
+          -->
+        </form>
+      </div>
+    </div>
+    <script>
+      var ACCESS_TOKEN="";
+      window.addEventListener("load", function() {
+        document.getElementById("login_user").onclick = function() {
+          axios({
+            method: "post",
+            url: "http://127.0.0.1:1234/api/user/login",
+            data: {
+              username: document.getElementById("frm-username").value,
+              password: document.getElementById("frm-password").value
+            }
+          })
+            .then(function(res) {
+              console.log(res)
+                app.LOGIN_SUCCESS = true;
+                ACCESS_TOKEN=res.data.access_token;
+                document.getElementById("div_login_form").style = "display: none";
+                document.getElementById("div_google_map").style = "display:block";
+                socket = io("http://localhost:1235", {
+                query: {token: ACCESS_TOKEN} },{origins:"*"});
+                app.connect_to_server();
+            })
+            .catch(function(err) {
+              console.log(err);
+            });
+        };
+      });
+    </script>
+    <script src="./resource/socket.io.js"></script>
+    <script src="./resource/vue.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>
