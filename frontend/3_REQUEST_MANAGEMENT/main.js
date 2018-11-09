@@ -35,9 +35,7 @@ var app = new Vue({
              geocoder = new google.maps.Geocoder();
              infowindow = new google.maps.InfoWindow();
             document.getElementById("submit").addEventListener("click", function() {
-              var address = document.getElementById("address").value;
-              self.geocodeAddress(geocoder,address, map);
-              
+             
             });
               map = new google.maps.Map(
               document.getElementById("googleMap"),  mapProp);
@@ -49,22 +47,14 @@ var app = new Vue({
                   map: map,
                   draggable:true 
               });
-              infowindow.open(map, marker);
-      
-              marker.addListener('dragend', function(){
-                  console.log('rever')
-                  self.geocodeLatLng(geocoder, map, {
-                      lat: marker.position.lat(),
-                      lng: marker.position.lng()
-                  } );
-              });
+              infowindow.open(map, marker);      
+          
           }
     },
     created() {
 
     },
     mounted() {
-        //socket = io('http://localhost:1235');
         var self = this;
         socket.on('event-request-management', function(rows){
             self.requests = JSON.parse(rows);

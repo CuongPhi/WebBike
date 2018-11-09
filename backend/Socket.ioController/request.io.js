@@ -2,7 +2,8 @@ var RequestRepos =  require ('../repos/request-receiver');
 const requestRepos = new RequestRepos();
 var moment = require('moment');
 
-var eventGetAll = (io)=>{
+var eventGetAll = (io,client)=>{
+    client.type = 'LI';
     requestRepos.getAll_Stt0()
     .then(rows=>{
         io.sockets.emit('event-request-reciever', JSON.stringify(rows));
@@ -14,7 +15,8 @@ var eventGetAll = (io)=>{
         }));
     })
 }
-var eventGetAllReq = (io)=>{
+var eventGetAllReq = (io,client)=>{
+    client.type = 'RM';
     requestRepos.getAll()
     .then(rows=>{
         io.sockets.emit('event-request-management', JSON.stringify(rows));
@@ -27,9 +29,15 @@ var eventGetAllReq = (io)=>{
     })
 }
 
+var driverConnect= (io, client) =>{
+    console.log('driver connect id = ' + client.id)    
+    client.type = 'DR';
+    io.emit("event-driver-connecting", "aaaaaaaaaaaa");
+}
 module.exports.response = function(io, client){
-    eventGetAll(io);
-    eventGetAllReq(io);
+    eventGetAll(io,client);
+    eventGetAllReq(io,client);
+    driverConnect(io,client);
     client.on('disconnecting', (reason)=>{
         console.log('disconnecting, id = ' + client.id + reason);        
     });
@@ -49,4 +57,7 @@ module.exports.response = function(io, client){
             io.sockets.emit('event-change-stt-to-1-ok', req);
         })
     });
+    // client.on("event-driver-connecting", (req)=>{
+
+    // });
 }
