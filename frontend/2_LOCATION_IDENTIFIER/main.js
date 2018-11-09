@@ -1,4 +1,3 @@
-var socket = io("http://localhost:1235");
 var map, marker,infowindow, geocoder;
 const ZOOM_SIZE = 16;
 var LATLNG;
@@ -6,7 +5,8 @@ var app = new Vue({
   el: "#app",
   data: {
     msg: "no msg",
-    requests: []
+    requests: [],
+    socket: null
   },
   methods: {
     searchAddress(address){
@@ -116,19 +116,13 @@ var app = new Vue({
     }
   },
   created() {
-    var self = this;
-    socket.on("event-change-stt-to-1-ok", function(req) {
-      var _req = JSON.parse(req);
-      self.requests.forEach((e, index, object) => {
-        if (e.id == _req.id) {
-          object.splice(index, 1);
-        }
-      });
-    });
+ 
   },
   mounted() {
     var self = this;
-    socket.on("event-request-reciever", function(rows) {
+    self.socket = io("http://localhost:1235", {
+         query: {token: window.localStorage.token_key} },{origins:"*"});
+    self.socket.on("event-request-reciever", function(rows) {
       self.requests = JSON.parse(rows);
       self.requests.sort(function(a, b) {
         return b.iat - a.iat;
@@ -139,7 +133,15 @@ var app = new Vue({
         e.status_string = 'Chưa định vị';
       });
     });
-   
+
+    self.socket.on("event-change-stt-to-1-ok", function(req) {
+      var _req = JSON.parse(req);
+      self.requests.forEach((e, index, object) => {
+        if (e.id == _req.id) {
+          object.splice(index, 1);
+        }
+      });
+    });
     google.maps.event.addDomListener(window, "load", self.initialize);
   }
 });
