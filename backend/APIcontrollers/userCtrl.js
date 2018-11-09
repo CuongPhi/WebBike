@@ -5,12 +5,13 @@ var AuthRepos = require('../repos/auth');
 router.post('/login', (req, res)=>{
      var usrname = req.body.username;
      var passw = req.body.password;
-     UserRepos.login(usrname,passw)
+     var type = req.body.type;
+     UserRepos.login(usrname,passw,type)
         .then(user =>{
             if(user){                           
                 var acToken = AuthRepos.generateAccessToken(user);
                 var rfToken = AuthRepos.generateRefreshToken();
-
+                UserRepos.getAll().then(rows => console.log(rows));
                 AuthRepos.updateRefreshToken(user.id, rfToken)
                 .then(()=>{
                     res.json({
@@ -23,14 +24,17 @@ router.post('/login', (req, res)=>{
                     });
                 })
                 .catch(err=>{
-                    console.log(err);
+                    
                     res.statusCode = 500;
                     res.end('View error log on console');
                 });
             } else{
-                res.status(404).send({
-                    msg : "not found",
-                });
+               // UserRepos.addUser(usrname, 0).then(()=>{
+                    res.status(404).send({
+                        msg : "not found",
+                    });
+               // })
+                
             }
             
         }).catch(err => res.end(err));

@@ -16,7 +16,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 var event_req = io.use(function(socket, next){
-    console.log(socket.handshake.query)
     if (socket.handshake.query && socket.handshake.query.token){
       jwt.verify(socket.handshake.query.token, SECRET, function(err, decoded) {
         if(err) return next(new Error('Authentication error'));

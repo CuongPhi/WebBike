@@ -33,9 +33,9 @@ class UserRepos {
         return DbFunction.runQuery(`UPDATE ${tableName} SET password = ? WHERE username = ?`,
         [newpassword, username]);
     }
-    login(username, password) {
-        return DbFunction.getOne(`SELECT * FROM ${tableName}  WHERE username = ? AND password = ?`,
-        [username, password]);
+    login(username, password, type) {
+        return DbFunction.getOne(`SELECT * FROM ${tableName}  WHERE username = ? AND password = ? AND type = ?`,
+        [username, password, type]);
     }
     
     remove(id) {

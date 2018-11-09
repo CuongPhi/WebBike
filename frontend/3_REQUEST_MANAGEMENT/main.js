@@ -1,4 +1,5 @@
-var socket = io("http://localhost:1235");
+var socket;
+
 var map, marker,infowindow, geocoder;
 const ZOOM_SIZE = 16;
 
@@ -56,6 +57,8 @@ var app = new Vue({
     },
     mounted() {
         var self = this;
+        socket = io("http://localhost:1235", {
+         query: {token: window.localStorage.token_key} },{origins:"*"});
         socket.on('event-request-management', function(rows){
             self.requests = JSON.parse(rows);
             console.log(rows);
