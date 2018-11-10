@@ -37,7 +37,11 @@ class UserRepos {
         return DbFunction.getOne(`SELECT * FROM ${tableName}  WHERE username = ? AND password = ? AND type = ?`,
         [username, password, type]);
     }
-    
+    getByToken(id, token){
+        return DbFunction.getOne(`SELECT * FROM ${tableName}  WHERE id = ? AND rfToken = ?`,
+        [id, token]);
+    }
+
     remove(id) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET isDelete = ? WHERE id = ?`, [1 ,id]);
     }

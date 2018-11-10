@@ -5,6 +5,7 @@ var PORT = process.env.PORT || 1234;
 var app = express();
 var reqCtrl = require('./APIcontrollers/requestCtrl')
 var userCtrl = require('./APIcontrollers/userCtrl');
+var authCtrl =  require('./APIcontrollers/authCtrl');
 var io = require('socket.io', {origins:"*"}).listen(PORT + 1);
 var request_io = require('./Socket.ioController/request.io');
 var AuthRepos = require('./repos/auth');
@@ -32,11 +33,10 @@ var event_req = io.use(function(socket, next){
 });
  
 
-
 app.use('/api/req/', reqCtrl);
 
-app.use('/api/user/', userCtrl);
-
+app.use('/api/user/', AuthRepos.verifyAccessToken, userCtrl);
+app.use('/api/authen/', authCtrl);
 
 
 // catch bad request

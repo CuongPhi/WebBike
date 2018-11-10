@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="./resource/style.css" media="screen" />
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyD8bQzMru84BpSm9d9pl6bNWn8U10Ru9U0&sensor=false"></script>
+    <link rel="stylesheet" href="./resource/login.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>DRIVER</title>
+  </head>
+  <body >
+    <div id="app">
+      <div  id="div_google_map">
+        <div class="wraper">
+          <div
+            class="table-display-req div-erea-parent"
+            style="height:10vh"
+          ></div>
+          <div class="google-map-area div-erea-parent">
+            <div id="googleMap" style="width:100%; height:50vh;"></div>
+          </div>
+          <div class="table-display-req div-erea-parent"></div>
+        </div>
+      </div>
+      
+    </div>
+    <script src="./resource/socket.io.js"></script>
+    <script src="./resource/vue.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>
