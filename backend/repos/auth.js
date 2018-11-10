@@ -5,7 +5,7 @@ var moment = require('moment');
 var DbFunction = require('../fn/sqlite3-db');
 
 const SECRET = 'ABCDEF';
-const AC_LIFETIME = 600; // seconds
+const AC_LIFETIME = 60; // seconds
 
 class AuthRepos {
     generateAccessToken(userEntity) {

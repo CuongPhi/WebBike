@@ -113,6 +113,16 @@ var app = new Vue({
                 lng: marker.position.lng()
             } );
         });
+    },
+    get_new_access_token(rf, id){
+      return  axios({
+            method: "post",
+           url: "http://127.0.0.1:1234/api/authen/new_token",
+           data: {   
+            ref_token : rf,
+            id : id      
+           }      
+           })
     }
   },
   created() {
@@ -120,6 +130,32 @@ var app = new Vue({
   },
   mounted() {
     var self = this;
+	  if(localStorage.token_key && localStorage.ref_token && localStorage.uid){
+                axios({
+                    method: "post",
+                    url: "http://127.0.0.1:1234/api/user/auth",
+                    data: {
+                     
+                    },
+                    headers: {
+                      "x-access-token" :  localStorage.token_key
+                    }
+                  }).then((data)=>{
+                      
+                  })
+                  .catch(err=>{
+                      self.get_new_access_token(localStorage.ref_token, localStorage.uid)
+                      .then(user=>{
+                          window.localStorage.token_key = user.data.access_token;
+                      }).catch(err=>{
+                          window.location.href = "index.html";
+                      })
+                  });
+      
+            }else{
+                window.location.href = "index.html";
+            }
+            
     self.socket = io("http://localhost:1235", {
          query: {token: window.localStorage.token_key} },{origins:"*"});
     self.socket.on("event-request-reciever", function(rows) {
