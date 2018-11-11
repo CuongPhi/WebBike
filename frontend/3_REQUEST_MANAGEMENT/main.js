@@ -1,4 +1,3 @@
-var socket;
 
 var map, marker,infowindow, geocoder;
 const ZOOM_SIZE = 16;
@@ -7,7 +6,8 @@ var app = new Vue({
     el : '#app',
     data : {
         msg : "no msg",
-        requests : []
+        requests : [],
+        socket: null
     },
     methods: {
         viewRide(){
@@ -60,6 +60,44 @@ var app = new Vue({
                   id : id      
                  }      
                  })
+          },
+          loadData(token){
+              var self =this;
+                    window.localStorage.token_key = token;
+                    self.socket = io("http://localhost:1235", {
+                      query: {token: window.localStorage.token_key} },{origins:"*"});
+
+
+                      self.socket.on('event-request-management', function(rows){
+                        self.requests = JSON.parse(rows);
+                        console.log(rows);
+            
+                        self.requests.sort(function(a, b) {
+                          return b.iat - a.iat;
+                        });
+                        self.requests.forEach(e => {
+                          e.date = self.timeConverter(e.iat);
+                          e.note_trim = e.note.substr(0, 30);
+                          switch(e.status){
+                            case 0:
+                            e.status_string = 'Chưa định vị'; 
+                            break;
+                            case 1:
+                            e.status_string = 'Đã định vị'; 
+                            break;
+                            case 2:
+                            e.status_string = 'Đã có xe nhận'; 
+                            break;
+                            case 3:
+                            e.status_string = 'Đang di chuyển'; 
+                            break;
+                            case 4:
+                            e.status_string = 'Hoàn thành'; 
+                            break;
+                          }
+                        });           
+                    });
+                      
           }
     },
     created() {
@@ -79,12 +117,12 @@ var app = new Vue({
                 "x-access-token" :  localStorage.token_key
               }
             }).then((data)=>{
-                
+                self.loadData(localStorage.token_key );
             })
             .catch(err=>{
                 self.get_new_access_token(localStorage.ref_token, localStorage.uid)
                 .then(user=>{
-                    window.localStorage.token_key = user.data.access_token;
+                  self.loadData(user.data.access_token);
                 }).catch(err=>{
                     window.location.href = "index.html";
                 })
@@ -94,37 +132,6 @@ var app = new Vue({
         window.location.href = "index.html";
       }
 
-        socket = io("http://localhost:1235", {
-         query: {token: window.localStorage.token_key} },{origins:"*"});
-        socket.on('event-request-management', function(rows){
-            self.requests = JSON.parse(rows);
-            console.log(rows);
-
-            self.requests.sort(function(a, b) {
-              return b.iat - a.iat;
-            });
-            self.requests.forEach(e => {
-              e.date = self.timeConverter(e.iat);
-              e.note_trim = e.note.substr(0, 30);
-              switch(e.status){
-                case 0:
-                e.status_string = 'Chưa định vị'; 
-                break;
-                case 1:
-                e.status_string = 'Đã định vị'; 
-                break;
-                case 2:
-                e.status_string = 'Đã có xe nhận'; 
-                break;
-                case 3:
-                e.status_string = 'Đang di chuyển'; 
-                break;
-                case 4:
-                e.status_string = 'Hoàn thành'; 
-                break;
-              }
-            });           
-        });
         google.maps.event.addDomListener(window, "load", self.initialize);
 
     },

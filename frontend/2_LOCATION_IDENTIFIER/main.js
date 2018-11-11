@@ -123,6 +123,32 @@ var app = new Vue({
             id : id      
            }      
            })
+    },
+    loadData(token){
+      var self = this;
+          window.localStorage.token_key = token;
+          self.socket = io("http://localhost:1235", {
+            query: {token: localStorage.token_key} },{origins:"*"});
+        self.socket.on("event-request-reciever", function(rows) {
+        self.requests = JSON.parse(rows);
+        self.requests.sort(function(a, b) {
+          return b.iat - a.iat;
+        });
+        self.requests.forEach(e => {
+          e.date = self.timeConverter(e.iat);
+          e.note_trim = e.note.substr(0, 30);
+          e.status_string = 'Chưa định vị';
+        });
+      });
+
+      self.socket.on("event-change-stt-to-1-ok", function(req) {
+        var _req = JSON.parse(req);
+        self.requests.forEach((e, index, object) => {
+          if (e.id == _req.id) {
+            object.splice(index, 1);
+          }
+        });
+      });
     }
   },
   created() {
@@ -141,12 +167,12 @@ var app = new Vue({
                       "x-access-token" :  localStorage.token_key
                     }
                   }).then((data)=>{
-                      
+                    self.loadData(localStorage.token_key);
                   })
                   .catch(err=>{
                       self.get_new_access_token(localStorage.ref_token, localStorage.uid)
                       .then(user=>{
-                          window.localStorage.token_key = user.data.access_token;
+                        self.loadData(user.data.access_token);
                       }).catch(err=>{
                           window.location.href = "index.html";
                       })
@@ -156,28 +182,7 @@ var app = new Vue({
                 window.location.href = "index.html";
             }
             
-    self.socket = io("http://localhost:1235", {
-         query: {token: window.localStorage.token_key} },{origins:"*"});
-    self.socket.on("event-request-reciever", function(rows) {
-      self.requests = JSON.parse(rows);
-      self.requests.sort(function(a, b) {
-        return b.iat - a.iat;
-      });
-      self.requests.forEach(e => {
-        e.date = self.timeConverter(e.iat);
-        e.note_trim = e.note.substr(0, 30);
-        e.status_string = 'Chưa định vị';
-      });
-    });
-
-    self.socket.on("event-change-stt-to-1-ok", function(req) {
-      var _req = JSON.parse(req);
-      self.requests.forEach((e, index, object) => {
-        if (e.id == _req.id) {
-          object.splice(index, 1);
-        }
-      });
-    });
+ 
     google.maps.event.addDomListener(window, "load", self.initialize);
   }
 });
