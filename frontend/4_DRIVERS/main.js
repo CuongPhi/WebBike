@@ -9,9 +9,45 @@ var app = new Vue({
         requests : [],
         LATLNG : { lat:10.7624176, lng: 106.6790081},
         driver : {},
-        statusType : "driver-btn-online"
+        statusType : { str : "driver-btn-offline", lb :'OFFLINE'},
+        status_checked : false,
+        found_user : false,
+        user_wasfound : null
     },
     methods: {
+        DeclineUser(){
+            var sefl = this;
+            sefl.found_user = false;
+            socket.emit('accept-user-request', JSON.stringify({                
+                userid: sefl.user_wasfound.id,
+                driverid : parseInt(localStorage.uid)
+             }));
+        },
+        AcceptUser(){
+            var sefl = this;
+            sefl.found_user = false;
+
+        },
+        onClickChangStatus(){
+            var self = this;
+            setTimeout(function(){
+                if(self.status_checked){
+                    socket.emit("event-find-request-of-driver", "");
+                    self.statusType.str = 'driver-btn-online';  
+                    self.statusType.lb = 'ONLINE';                    
+                  
+                }
+                else {
+                    self.statusType.str = 'driver-btn-offline';
+                    self.statusType.lb = 'OFFLINE';                    
+
+                }
+
+            }, 0)
+           
+        
+        }
+        ,
         viewRide(){
             console.log('view ride');
         }
@@ -88,10 +124,7 @@ var app = new Vue({
                 console.log(data)
              });
 
-             socket.on('find-user-successfuly', function(user){
-                 var _user = JSON.parse(user);
-                 console.log(_user);
-             });
+           
              switch  (self.driver.status){
                     case 0:
                         self.statusType = "driver-btn-online";
@@ -101,6 +134,19 @@ var app = new Vue({
                         break;
              }
              // code event socket here ...
+             socket.on('find-user-successfuly', function(user){
+                var _user = JSON.parse(user);
+                console.log(_user);
+                self.found_user = true;
+                self.user_wasfound = _user;
+            });
+            socket.on('event-driver-running', function(d){
+                self.statusType = {
+                    str : 'driver-btn-have-user',
+                    lb : 'Going to USER'
+                }
+            })
+
         }
     },
     beforeCreate() {
