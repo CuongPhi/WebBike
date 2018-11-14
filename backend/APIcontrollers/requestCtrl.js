@@ -1,7 +1,6 @@
 var router = require("express").Router();
 var RequestRepos =  require ('../repos/request-receiver');
 var moment = require('moment');
-const requestRepos = new RequestRepos();
 
 
 
@@ -13,7 +12,7 @@ router.get('/', (req,res)=>{
      note : req.query.note,
      iat: moment().unix()
     }
-    requestRepos.addRequest(reqObj).then(()=>{
+    RequestRepos.addRequest(reqObj).then(()=>{
 
         res.status(201).send(JSON.stringify({
             stt : 'success',

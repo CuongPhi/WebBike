@@ -8,6 +8,8 @@ var app = new Vue({
         msg : "no msg",
         requests : [],
         LATLNG : { lat:10.7624176, lng: 106.6790081},
+        driver : {},
+        statusType : "driver-btn-online"
     },
     methods: {
         viewRide(){
@@ -73,6 +75,32 @@ var app = new Vue({
                 id : id      
                }      
                })
+        }, 
+        loadData(token){
+            var self = this;
+            localStorage.token_key = token;
+            var user_type = localStorage.user_type;
+            var user_id = localStorage.uid;
+
+            socket = io("http://localhost:1235", {
+                query: {token: token, u_type: user_type, u_id : user_id} },{origins:"*"});
+            socket.on('event-driver-connecting',function(data){
+                console.log(data)
+             });
+
+             socket.on('find-user-successfuly', function(user){
+                 var _user = JSON.parse(user);
+                 console.log(_user);
+             });
+             switch  (self.driver.status){
+                    case 0:
+                        self.statusType = "driver-btn-online";
+                        break;
+                    case 1:
+                        self.statusType = "driver-btn-offline";
+                        break;
+             }
+             // code event socket here ...
         }
     },
     beforeCreate() {
@@ -94,12 +122,14 @@ var app = new Vue({
                       "x-access-token" :  localStorage.token_key
                     }
                   }).then((data)=>{
-                      
+                    self.loadData( localStorage.token_key);
+                    self.driver.status =  parseInt( localStorage.driver_status);
                   })
                   .catch(err=>{
                       self.get_new_access_token(localStorage.ref_token, localStorage.uid)
                       .then(user=>{
-                          window.localStorage.token_key = user.data.access_token;
+                        self.loadData(user.data.access_token);
+                        self.driver.status = user.data.status;
                       }).catch(err=>{
                           window.location.href = "index.html";
                       })
@@ -110,12 +140,7 @@ var app = new Vue({
             }
             
         
-        var ACCESS_TOKEN = localStorage.token_key;
-        socket = io("http://localhost:1235", {
-            query: {token: ACCESS_TOKEN} },{origins:"*"});
-        socket.on('event-driver-connecting',function(data){
-            console.log(data)
-         });
+      
          google.maps.event.addDomListener(window, "load", self.initialize);
 
     },

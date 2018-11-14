@@ -5,16 +5,19 @@ var AuthRepos = require('../repos/auth');
 router.post('/new_token', (req,res)=>{
     var user_ref_token = req.body.ref_token;
     var user_id = req.body.id;
-    console.log(req.body)
     if(user_ref_token && user_id){
-        console.log("ok")
         UserRepos.getByToken(user_id, user_ref_token)
         .then(user=>{
             var acToken = AuthRepos.generateAccessToken(user);
-            res.json({
+            var user_res = {
                 auth: true,
                 access_token: acToken,
-            });
+                type: user.type
+            };
+            if(user.type == 2) {
+                user_res.status = user.status;
+            }
+            res.json(user_res);
         }).catch(err=>{
                    
             res.statusCode = 500;
@@ -33,21 +36,26 @@ router.post('/login', (req, res)=>{
     var type = req.body.type;
     UserRepos.login(usrname, passw, type)
        .then(user =>{
-           if(user){                           
+           if(user){             
                var acToken = AuthRepos.generateAccessToken(user);
                var rfToken = AuthRepos.generateRefreshToken();
                
                AuthRepos.updateRefreshToken(user.id, rfToken)
                .then(()=>{
-                   res.json({
-                       auth: true,
-                       user: {
-                           uid :user.id,
-                           username: user.username
-                       },
-                       access_token: acToken,
-                       refresh_token : rfToken
-                   });
+                   var user_res = {
+                        auth: true,
+                        user: {
+                            uid :user.id,
+                            username: user.username,
+                            type: user.type
+                        },
+                        access_token: acToken,
+                        refresh_token : rfToken
+                    };
+                    if(user.type == 2) {
+                        user_res.user.status = user.status;
+                    }
+                   res.json(user_res);
                })
                .catch(err=>{
                    
@@ -66,6 +74,7 @@ router.post('/login', (req, res)=>{
        }).catch(err => res.end(err));
 
 });
+
 
 
 module.exports = router;
