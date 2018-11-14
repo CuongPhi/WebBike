@@ -35,11 +35,19 @@ class DriverRepos {
     getById(id) {
         return DbFunction.getOne(`SELECT * FROM ${tableName} WHERE id = ?`, [id])
     }
+    getByIdStt0(id) {
+        return DbFunction.getOne(`SELECT * FROM ${tableName} WHERE id = ? and status = 0`, [id])
+
+    }
     getAll() {
         return DbFunction.getAll(`SELECT * FROM  ${tableName}`);
     }
     dropTable(){
         return DbFunction.runQuery(`Drop table IF EXISTS   ${tableName}`);
+
+    }
+    changeStt(stt , id) {
+        return DbFunction.runQuery(`UPDATE ${tableName} SET status = ? WHERE id = ?`, [stt ,id]);
 
     }
 }

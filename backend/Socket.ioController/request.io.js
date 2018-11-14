@@ -28,11 +28,26 @@ var eventGetAllReq = (io,client)=>{
     })
 }
 
-var driverConnect = (io, client) =>{
-    findRequest(client.u_id).then(user=>{
-        client.emit("find-user-successfuly", JSON.stringify( user));
+var driverConnect = (io, client) =>{    
+    client.on('event-find-request-of-driver', (d)=>{
+        findRequest(client.u_id).then(user=>{
+            client.emit("find-user-successfuly", JSON.stringify( user));
+        })
+        .catch(err => console.log(err));
+    });
+    client.on('accept-user-request', d =>{
+        var data = JSON.parse(d)
+        DriverRepos.changeStt(1 , data.driverid).then(()=>{
+            RequestRepos.updateRequestStt({
+                status : 2,
+                id : data.userid
+            }).then(()=>{
+                client.emit('event-driver-running',"");
+            }).catch(err=>console.log(err));
+        }).catch(err=>console.log(err));
+       
+
     })
-    .catch(err => console.log(err));
 
 }
     
@@ -41,7 +56,7 @@ var driverConnect = (io, client) =>{
  */
 var findRequest= (id) =>{
     return new Promise((resolve, reject)=>{
-        DriverRepos.getById(id)
+        DriverRepos.getByIdStt0(id)
         .then(driver=>{
             if(driver){
                 RequestRepos.getAll_Stt1().then(rows=>{
