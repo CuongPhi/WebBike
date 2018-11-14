@@ -62,11 +62,13 @@ var app = new Vue({
                  })
           },
           loadData(token){
-              var self =this;
-                    window.localStorage.token_key = token;
-                    self.socket = io("http://localhost:1235", {
-                      query: {token: window.localStorage.token_key} },{origins:"*"});
+            var self = this;
+            localStorage.token_key = token;
+            var user_type = localStorage.user_type;
+            var user_id = localStorage.uid;
 
+                    self.socket = io("http://localhost:1235", {
+                      query: {token: token, u_type: user_type, u_id : user_id} },{origins:"*"});
 
                       self.socket.on('event-request-management', function(rows){
                         self.requests = JSON.parse(rows);

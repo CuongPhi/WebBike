@@ -15,9 +15,11 @@ var app = new Vue({
       self.geocodeAddress(geocoder,address,map);
     },
     changeStt(_id) {
+      var self = this;
+
       var r = confirm(`Định vị id: ${_id} ?`);
       if(r){
-         socket.emit('event-change-stt-to-1', JSON.stringify({
+        self.socket.emit('event-change-stt-to-1', JSON.stringify({
            id : _id,
            lat: LATLNG.lat(),
            lng: LATLNG.lng()
@@ -127,8 +129,12 @@ var app = new Vue({
     loadData(token){
       var self = this;
           window.localStorage.token_key = token;
+          var user_id = localStorage.uid;
+          var user_type = localStorage.user_type;
+
           self.socket = io("http://localhost:1235", {
-            query: {token: localStorage.token_key} },{origins:"*"});
+            query: {token: token, u_type: user_type, u_id : user_id} },{origins:"*"});
+
         self.socket.on("event-request-reciever", function(rows) {
         self.requests = JSON.parse(rows);
         self.requests.sort(function(a, b) {

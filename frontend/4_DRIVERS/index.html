@@ -51,10 +51,11 @@
                   }
                 })
                   .then(function(res) {
-                    console.log(res)
                       window.localStorage.ref_token = res.data.refresh_token;
                       window.localStorage.token_key =res.data.access_token;
                       window.localStorage.uid = res.data.user.uid;
+                      window.localStorage.driver_status = parseInt(res.data.user.status);
+                      window.localStorage.user_type = res.data.user.type;
                       window.location.href = 'main.html';
                       app.isLogin = true;
                   })

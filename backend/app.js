@@ -12,6 +12,7 @@ var AuthRepos = require('./repos/auth');
 const SECRET = 'ABCDEF';
 var jwt = require('jsonwebtoken');
 
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
@@ -21,6 +22,8 @@ var event_req = io.use(function(socket, next){
       jwt.verify(socket.handshake.query.token, SECRET, function(err, decoded) {
         if(err) return next(new Error('Authentication error'));
         socket.decoded = decoded;
+        socket.u_type = socket.handshake.query.u_type;
+        socket.u_id = socket.handshake.query.u_id;
         next();
       });
     } else {
@@ -32,6 +35,7 @@ var event_req = io.use(function(socket, next){
 
 });
  
+
 
 app.use('/api/req/', reqCtrl);
 

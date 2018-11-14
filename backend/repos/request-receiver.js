@@ -50,6 +50,10 @@ class RequestRepos {
         return DbFunction.getAll(`SELECT * FROM  ${tableName} WHERE isDelete = 0 AND status = 0`);
 
     }
+    getAll_Stt1(){
+        return DbFunction.getAll(`SELECT * FROM  ${tableName} WHERE isDelete = 0 AND status = 1`);
+
+    }
     updateRequestStt(Request) {
         return DbFunction.runQuery(`UPDATE ${tableName} SET status = ? WHERE id = ?`,
         [Request.status, Request.id]);
@@ -62,4 +66,4 @@ class RequestRepos {
 
 
 
-module.exports = RequestRepos;
+module.exports = new RequestRepos();
