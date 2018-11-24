@@ -142,7 +142,9 @@ var app = new Vue({
         });
         self.requests.forEach(e => {
           e.date = self.timeConverter(e.iat);
+		  if (e.note) {
           e.note_trim = e.note.substr(0, 30);
+		  }
           e.status_string = 'Chưa định vị';
         });
       });
