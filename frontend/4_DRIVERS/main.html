@@ -13,8 +13,7 @@
   </head>
   <body >
     <div id="app">
-        <div  style="height:50px">	<span style="float:right"><button v-on:click='logout()' id='btn-logout'>Sign out</button></span>
-        </div>
+        
       <div  id="div_google_map">
         <div class="wraper">
           <div style="height:10vh">
@@ -23,6 +22,8 @@
             <input type="checkbox" @click="onClickChangStatus()" v-model="status_checked" id="checkbox_stt">
             <span class="slider round"></span>
           </label>     
+          	<span style="float:right"><button v-on:click='logout()' id='btn-logout'>Sign out</button></span>
+           
         </div>
           <div class="google-map-area div-erea-parent">
             <div id="googleMap" style="width:100%; height:50vh;"></div>
