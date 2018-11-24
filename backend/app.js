@@ -31,6 +31,7 @@ var event_req = io.use(function(socket, next){
     }    
   })
 .on('connection', client =>{
+    console.log('user connecting');
     request_io.response(io, client); 
 
 });

@@ -9,6 +9,12 @@ var app = new Vue({
     socket: null
   },
   methods: {
+    logout(){
+      if(confirm('Do you wanna sign out ?')){
+        localStorage.clear();
+        location = 'index.html';
+      }
+    },
     searchAddress(address){
       var self = this;
       document.getElementById("address").value = address;

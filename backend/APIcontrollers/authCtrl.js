@@ -75,6 +75,37 @@ router.post('/login', (req, res)=>{
 
 });
 
+router.post('/signup', (req, res)=>{
+    var username = req.body.username;
+    var password = req.body.password;
+    var type = req.body.type;
+    if(!username || !password || !type) {
+        return;
+    } else {
+        UserRepos.getByUserName(username).then(user =>{
+            if(!user) {
+                UserRepos.addNewUser(username, password, type)
+                .then(()=>{                    
+                        res.status(200).send({
+                            msg : "OK",
+                        });   
+                }).catch(err => {
+                   res.status(401).send({
+                       msg : "not found",
+                   });
+                });
+            }
+            else {
+                res.status(400).send({
+                    msg : "user name is exist",
+                });
+            }
+        }).catch(err=>{
+
+        })
+        
+    }
+})
 
 
 module.exports = router;

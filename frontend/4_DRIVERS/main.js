@@ -15,6 +15,12 @@ var app = new Vue({
         user_wasfound : null
     },
     methods: {
+        logout(){
+            if(confirm('Do you wanna sign out ?')){
+              localStorage.clear();
+              location = 'index.html';
+            }
+          },
         DeclineUser(){
             var sefl = this;
             sefl.found_user = false;

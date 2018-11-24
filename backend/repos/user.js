@@ -59,6 +59,10 @@ class UserRepos {
         return DbFunction.runQuery(`Drop table IF EXISTS   ${tableName}`);
 
     }
+    addNewUser(username, password , type) {
+        return DbFunction.runQuery(`INSERT INTO ${tableName}  (username, password, type, rfToken, iat) VALUES (?,?,?,?,?)`,
+        [username, password, type, "", 0]);
+    }
 }
 
 
