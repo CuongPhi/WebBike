@@ -2,7 +2,7 @@ var RequestRepos =  require ('../repos/request-receiver');
 var DriverRepos = require('../repos/driver');
 var moment = require('moment');
 const haversine = require('haversine')
-
+const NUM_LOOP_FIND_USER = 5;
 var eventGetAll = (io,client)=>{
     RequestRepos.getAll_Stt0()
     .then(rows=>{
@@ -28,13 +28,34 @@ var eventGetAllReq = (io,client)=>{
     })
 }
 
-var driverConnect = (io, client) =>{    
+var driverConnect = (io, client) =>{ 
     client.on('event-find-request-of-driver', (d)=>{
-        findRequest(client.u_id).then(user=>{
-            client.emit("find-user-successfuly", JSON.stringify( user));
-        })
-        .catch(err => console.log(err));
+        var loop =  0;
+        var fn = ()=> {
+            console.log('find user -->' + loop)
+            findRequest(client.u_id).then(user=>{
+                if(user) {
+                    client.emit("find-user-successfuly", JSON.stringify( user));
+                }
+                else {
+                    loop++;
+                    if(loop < NUM_LOOP_FIND_USER) {
+                        setTimeout(fn, 2500);
+                    }
+                    else {
+                        client.emit("find-user-fail", JSON.stringify("aa"));
+
+                    }
+                }
+            })
+            .catch(err => {
+                client.emit("find-user-fail", JSON.stringify("aa"));
+            });
+
+        } // end fn()
+        fn();
     });
+    
     client.on('accept-user-request', d =>{
         var data = JSON.parse(d)
         DriverRepos.changeStt(1 , data.driverid).then(()=>{
@@ -62,6 +83,9 @@ var findRequest= (id) =>{
                 RequestRepos.getAll_Stt1().then(rows=>{
                     var min = null;
                     var user =null;
+                    if(rows.length <0 ) {
+                        resolve(null);
+                    }
                     rows.forEach(element => {
                         req_location = {
                             latitude : element.lat,
@@ -82,16 +106,14 @@ var findRequest= (id) =>{
 
 
                 }).catch(err => reject(err));
+            } else {
+                reject( new Error("driver not founr !"));
             }
           
         }).catch(err => reject(err));
     });
    
 }
-
-
-
-
 
 
 module.exports.response = function(io, client){

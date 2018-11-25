@@ -22,7 +22,7 @@ var app = new Vue({
     },
     changeStt(_id) {
       var self = this;
-
+        console.log(LATLNG)
       var r = confirm(`Định vị id: ${_id} ?`);
       if(r){
         self.socket.emit('event-change-stt-to-1', JSON.stringify({
