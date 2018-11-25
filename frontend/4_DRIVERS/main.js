@@ -7,7 +7,7 @@ var app = new Vue({
     data : {
         msg : "no msg",
         requests : [],
-        LATLNG : { lat:10.7624176, lng: 106.6790081},
+        LATLNG : { lat:0, lng: 0},
         driver : {},
         statusType : { str : "driver-btn-offline", lb :'OFFLINE'},
         status_checked : false,
@@ -15,6 +15,32 @@ var app = new Vue({
         user_wasfound : null
     },
     methods: {
+        setMarker(latlng) {
+            marker.setPosition( latlng);  
+        },
+        setLocation(){
+            var self = this;
+            address= document.getElementById("driver-address").value;
+            self.geocodeAddress(geocoder,address,map);
+        },
+        geocodeAddress(geocoder,address, map) {
+          var self = this;
+          geocoder.geocode({ address: address }, function(results, status) {
+            if (status === "OK") {
+                if (results[0]) {
+                    var LNG = results[0].geometry.location;
+                     self.setMarker(LNG);
+                     map.setCenter(LNG); 
+                     infowindow.setContent(results[0].formatted_address);
+                     self.LATLNG = LNG;
+                   } 
+            } else {
+              alert(
+                "Geocode was not successful for the following reason: " + status
+              );
+            }
+          });
+        },        
         logout(){
             if(confirm('Do you wanna sign out ?')){
               localStorage.clear();
@@ -36,9 +62,18 @@ var app = new Vue({
         },
         onClickChangStatus(){
             var self = this;
+            // if(self.LATLNG.lat== 0 && self.LATLNG.lng == 0) {
+            //     alert("Please set your location");
+            //     return;
+            // }
             setTimeout(function(){
+                if(self.LATLNG.lat== 0 && self.LATLNG.lng == 0) {
+                    alert("Please set your location");
+                    self.status_checked = false;
+                    return;
+                }
                 if(self.status_checked){
-                    socket.emit("event-find-request-of-driver", "");
+                    socket.emit("event-find-request-of-driver", "a");
                     self.statusType.str = 'driver-btn-online';  
                     self.statusType.lb = 'ONLINE';                    
                   
@@ -151,7 +186,13 @@ var app = new Vue({
                     str : 'driver-btn-have-user',
                     lb : 'Going to USER'
                 }
-            })
+                
+            });
+            socket.on('find-user-fail', function(a){
+                self.status_checked = false;
+                self.statusType.str = 'driver-btn-offline';
+                self.statusType.lb = 'OFFLINE'; 
+            });
 
         }
     },

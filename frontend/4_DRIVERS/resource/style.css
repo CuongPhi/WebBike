@@ -105,3 +105,7 @@ input:checked + .slider:before {
 .reverse-pannel-class{
     left: 50%; 
 }
+#div_google_map {
+  border: 3px solid blue;
+  padding: 3%;
+}
