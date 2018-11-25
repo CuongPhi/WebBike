@@ -1,10 +1,17 @@
-
 (function ($) {
     "use strict";
+    if(!(localStorage.token_key && localStorage.ref_token && localStorage.uid)){
+        location='index.html';
+    }
 
     hideError();
-    self.socket = io("http://localhost:1235", {
-        query: {} },{origins:"*"});
+    var token = window.localStorage.token_key ;
+    var user_id = localStorage.uid;
+    var user_type = localStorage.user_type;
+
+    var socket = io("http://localhost:1235", {
+      query: {token: token, u_type: user_type, u_id : user_id} },{origins:"*"});
+
 
     /*==================================================================
     [ Validate ]*/
