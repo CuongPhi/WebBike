@@ -9,6 +9,12 @@ var app = new Vue({
     socket: null
   },
   methods: {
+    logout(){
+      if(confirm('Do you wanna sign out ?')){
+        localStorage.clear();
+        location = 'index.html';
+      }
+    },
     searchAddress(address){
       var self = this;
       document.getElementById("address").value = address;
@@ -16,7 +22,7 @@ var app = new Vue({
     },
     changeStt(_id) {
       var self = this;
-
+        console.log(LATLNG)
       var r = confirm(`Định vị id: ${_id} ?`);
       if(r){
         self.socket.emit('event-change-stt-to-1', JSON.stringify({

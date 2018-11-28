@@ -57,7 +57,6 @@
                       window.localStorage.driver_status = parseInt(res.data.user.status);
                       window.localStorage.user_type = res.data.user.type;
                       window.location.href = 'main.html';
-                      app.isLogin = true;
                   })
                   .catch(function(err) {
                     console.log(err);
@@ -74,7 +73,7 @@
 </head>
 <body>
   <div id="app">
-    <div v-if="!isLogin">
+    <div>
     <div  class="header"><h2>Login</h2></div>
         <form id="formLogin">
           <div class="input-group">
