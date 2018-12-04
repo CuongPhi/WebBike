@@ -138,7 +138,8 @@ module.exports.response = function(io, client){
         newReq.iat = moment().unix();
         RequestRepos.addRequest(newReq)
         .then(()=>{
-           // eventGetAll(io);
+            eventGetAll(io, client);
+            eventGetAllReq(io,client);
         })
         .catch(err => console.log(err));
     });
@@ -147,6 +148,7 @@ module.exports.response = function(io, client){
         RequestRepos.locatedRequest(_req)
         .then(()=>{
             io.sockets.emit('event-change-stt-to-1-ok', req);
+            eventGetAllReq(io,client);
         })
     });
     // client.on("event-driver-connecting", (req)=>{
